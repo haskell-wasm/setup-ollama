@@ -1,0 +1,20 @@
+name: setup-ollama
+description: Setup Ollama on a hosted linux runner
+inputs:
+  override_conf:
+    description: override.conf for ollama.service
+    required: false
+    default: |
+      [Service]
+      Environment="OLLAMA_CONTEXT_LENGTH=32768"
+      Environment="OLLAMA_MAX_LOADED_MODELS=1"
+      Environment="OLLAMA_NUM_PARALLEL=1"
+      Environment="OLLAMA_ORIGINS=*"
+runs:
+  using: composite
+  steps:
+    - if: ${{ runner.os == 'Linux' }}
+      run: ${{ github.action_path }}/setup.sh
+      shell: bash
+      env:
+        OVERRIDE_CONF: ${{ inputs.override_conf }}
